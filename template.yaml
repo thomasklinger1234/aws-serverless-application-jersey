@@ -1,0 +1,40 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Transform: AWS::Serverless-2016-10-31
+
+Description: ""
+
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: webapi.container.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: "./target/webapi-impl-1.0-SNAPSHOT-lambda-package.zip"
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 20
+      Events:
+        HttpApiEvent:
+          Type: HttpApi
+          Properties:
+            TimeoutInMillis: 20000
+            PayloadFormatVersion: '1.0'
+
+  ApiFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ApiFunction}
+      RetentionInDays: 7
+
+Outputs:
+  ApiEndpoint:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/'
+  ApiFunctionLogGroupName:
+    Value: !Sub ${ApiFunctionLogGroup}
