@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
  * Junit entry point for cucumber tests.
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features",
-      glue = "webapi.impl.cucumber.steps",
+@CucumberOptions(features = "features",
+      glue = "webapi.api.impl.cucumber.steps",
       tags = {"not @NotImplemented"},// Use @NotImplemented tag for scenarios that have not been implemented
       plugin = {"pretty"})
 public class Api_IT {
